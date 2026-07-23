@@ -1,6 +1,6 @@
 ---
 name: deepseekSCI
-description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。严格遵守【零模拟数据、零步骤跳过、全量摘要提取与全文阅读、100%真实性】红线。融合 PubMed、Embase、Web of Science、Cochrane、Scopus、ScienceDirect、IEEE Xplore、Google Scholar 等全套数据库，涵盖从 PICO 课题构思、全量文献检索/综合/Meta分析 (Path A) 到 NHANES/MIMIC 大数据库挖掘、本地 R 语言稳健统计分析、出版级矢量图表创作、文献真伪校验全流程 (Path B)，直接产出发表级 SCI 论文。"
+description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。融合【浏览器控制自动化 (Browser Control)】与全套文献数据库 Skill（PubMed, Embase, Web of Science, Cochrane, Scopus, ScienceDirect, IEEE Xplore, Google Scholar等）。严格遵守【零模拟数据、零步骤跳过、全量摘要提取与全文阅读、100%真实性】红线，实现自动操控浏览器进行精准检索与信息提取，涵盖 Meta 分析 (Path A) 与 NHANES/MIMIC 大数据库挖掘及 R 语言分析 (Path B)，直接产出发表级 SCI 论文。"
 ---
 
 # deepseekSCI: 医学与科学研究 Plan-Execution 闭环 Protocol
@@ -19,21 +19,25 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
    - 所有分析结果（如 HR/OR/RR、95% CI、$p$ 值、$I^2$ 异质性等）**必须 100% 源自真实的本地 R / Python 脚本对真实 NHANES、MIMIC 数据库或文献真机抽取的运行输出**。
    - 缺失值必须通过标准的多重插补 (Multiple Imputation) 或完备病例分析处理，严禁人工编造填补。
 
-2. **📚 全量文献检索与摘要获取禁令 (Full-Coverage Literature & Abstract Retrieval)**
+2. **🌐 浏览器操控驱动全量检索 (Browser Control Driven Search & Extraction)**
+   - **严格联动 DeepSeek++ 浏览器控制能力 (`browser_*` 工具)**：根据文献 Skill 提供的检索语法与操作方向，自动挂载与操控浏览器标签页（PubMed, IEEE Xplore, Embase, Web of Science, Cochrane, Scopus, ScienceDirect, Google Scholar）。
+   - **自动导航、翻页与提取**：在网页输入框自动填充精准 Boolean 检索式，逐页导航，从 DOM / 文本快照中提取**每一篇文献的标题、作者、DOI 及完整摘要 (Abstract)**，严禁任何手动或代码层面的中途截断。
+
+3. **📚 全量文献检索与摘要获取禁令 (Full-Coverage Literature & Abstract Retrieval)**
    - **绝对禁止“仅获取前 10 篇 / 前 20 篇”等偷工减料行为**。
-   - 文献检索阶段必须构建精确的检索式，对于检索命中的每一篇相关文献，**必须 100% 获取其摘要 (Abstract) 进行完整初筛**。
+   - 文献检索阶段必须构建精准的检索式，对于检索命中的每一篇相关文献，**必须 100% 获取其摘要 (Abstract) 进行完整初筛**。
    - 明确认可：全量检索与逐篇摘要抓取虽然消耗较多时间与流量，但必须严格执行，不容打折。
 
-3. **📄 纳入文献 100% 全文阅读与深度提取 (Mandatory Full-Text Analysis)**
-   - 对于经过摘要初筛符合纳入标准的文献，**必须 100% 获取全文 (Full Text)**（调用 `pm-fulltext`, `gs-fulltext`, `scopus-fulltext` 或 DOI/PMC 解析）。
+4. **📄 纳入文献 100% 全文阅读与深度提取 (Mandatory Full-Text Analysis)**
+   - 对于经过摘要初筛符合纳入标准的文献，**必须 100% 获取全文 (Full Text)**（调用 `pm-fulltext`, `gs-fulltext`, `scopus-fulltext` 或通过浏览器控制导航至 PMC/Sci-Hub/出版社页面下载）。
    - **绝对禁止仅凭摘要信息推断结论或填报 Meta 数据**。必须深入全文 Methods、Results 及附表提取样本量、调整后 HR/OR/RR 及其 95% CI。
 
-4. **🪜 零步骤跳过原则 (Complete Step-by-Step Execution)**
+5. **🪜 零步骤跳过原则 (Complete Step-by-Step Execution)**
    - **绝对禁止**为了追求速度而跳过研究流程中的任何一步。
-   - 必须完整按顺序执行：**假说建立 $\rightarrow$ 因果 DAG 构造 $\rightarrow$ 全量文献精准检索与逐篇摘要提取 $\rightarrow$ 纳入文献全文获取与深度分析 $\rightarrow$ ROB2/ROBINS-I 偏倚评价 $\rightarrow$ R 语言 Meta 建模 $\rightarrow$ 真实性校验 $\rightarrow$ 论文撰写**。
+   - 必须完整按顺序执行：**假说建立 $\rightarrow$ 因果 DAG 构造 $\rightarrow$ 浏览器操控全量检索与逐篇摘要提取 $\rightarrow$ 纳入文献全文获取与深度分析 $\rightarrow$ ROB2/ROBINS-I 偏倚评价 $\rightarrow$ R 语言 Meta 建模 $\rightarrow$ 真实性校验 $\rightarrow$ 论文撰写**。
    - **宁慢勿错，每一步骤必须输出完整诊断日志**。
 
-5. **🔍 100% 真实性与防 AI 幻觉校验 (100% Fact & Citation Verification)**
+6. **🔍 100% 真实性与防 AI 幻觉校验 (100% Fact & Citation Verification)**
    - 论文引用的每一篇参考文献必须经由 `pm-paper-detail` / `reference-intelligence-mining` 校验真实 PMID / DOI / Accession ID，**严禁任何 AI 幻觉生成的虚假文献**。
    - 论文 Results 部分引用的每一个统计数字必须与本地 R / Python 控制台的日志输出或原文数据 **0 误差对应**。
 
@@ -53,6 +57,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
                       ┌─────────────────────────┐
                       │   Execution 模式 (执行) │
                       │ 本地 R/Python / 数据库挖掘│
+                      │ 浏览器控制自动化检索与提取 │
                       └────────────┬────────────┘
                                    │
                          数据反馈与结果评估
@@ -63,10 +68,10 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 ### 1. Plan 模式（需求构建与方案设计）
 - **规范科研问题**：使用 PICO (Population, Intervention/Exposure, Comparator, Outcome) 或 PECO 框架将用户思路标准化为严格的科研假设。
 - **因果关系与 DAG 构建**：在数据分析或文献抽取前，显式绘制有向无环图 (DAG)，明确暴露因素、结局变量、混杂因子 (Confounders)、中介因子 (Mediators) 和碰撞因子 (Colliders)。
-- **分析/检索 Plan 制定**：明确所使用的医学与工程数据库 (NHANES/MIMIC/PubMed/Embase/WOS/IEEE等)、R 语言统计模型策略（加权Logistic/Cox/RCS/PSM）及敏感性分析路径。
+- **分析/检索 Plan 制定**：明确所使用的医学与工程数据库 (NHANES/MIMIC/PubMed/Embase/WOS/IEEE等)、浏览器自动化操控路径、R 语言统计模型策略（加权Logistic/Cox/RCS/PSM）及敏感性分析路径。
 
-### 2. Execution 模式（工具驱动与数据分析执行）
-- **工具调用与执行**：驱动本地 Native Host (`shell`, `python_exec`, `Rscript`) 进行代码运行、全量文献检索与数据提取。
+### 2. Execution 模式（工具驱动、浏览器自动化与数据分析执行）
+- **工具调用与执行**：驱动本地 Native Host (`shell`, `python_exec`, `Rscript`) 进行代码运行；联动浏览器控制 (`browser_*`) 自动导航至各数据库网页执行输入、翻页与摘要/全文数据抽取。
 - **结果捕获与质量控制**：实时捕获代码输出结果、统计诊断指标（模型收敛性、$I^2$ 异质性、共线性 VIF 值等）。
 
 ### 3. 闭环迭代机制
@@ -76,25 +81,24 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 ## 🔬 流水线 1：文献综述与 Systematic Review / Meta 分析 (Path A)
 
-适用于无原始数据、基于已有文献进行二次合成的科研课题，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
+适用于无原始数据、基于已有文献进行二次合成的科研课题，结合用户已有的专业医学与工程文献数据库 Skill 矩阵及浏览器自动化控制进行检索与提取，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
 
 ### 阶段与步骤（不跳过任何一步）：
-1. **精准构建检索式与全量文献/摘要检索 (Precision Search & Full Abstract Harvesting)**
-   - 结合 MeSH 词、自由词与逻辑运算符构建精准检索式。
-   - 自动协同调用：
-     - **PubMed**: `pubmed-database`, `pm-search`, `pm-advanced-search`, `pm-paper-detail`, `pm-fulltext`, `pm-export`
-     - **IEEE Xplore**: `ieee-xplore-database`, `ieee-search`, `ieee-paper-detail`, `ieee-export`
-     - **Cochrane Library**: `ch-search`, `ch-advanced-search`, `ch-paper-detail`, `ch-export`
-     - **Web of Science**: `wos_lit_mining`, `wos-search`, `wos-paper-detail`, `wos-export`
-     - **Embase**: `embase-web-search`, `embase-session`, `embase-check-login`
-     - **Scopus**: `scopus-search`, `scopus-advanced-search`, `scopus-document-detail`, `scopus-export`, `scopus-fulltext`
-     - **ScienceDirect**: `sd-search`, `sd-advanced-search`, `sd-paper-detail`, `sd-export`
-     - **Google Scholar**: `gs-search`, `gs-advanced-search`, `gs-cited-by`, `gs-fulltext`, `gs-export`
-     - **OpenAlex / EuropePMC**: `literature-search-openalex`, `literature-search-europepmc`
-   - **逐篇提取摘要**：对检索到的所有结果（严禁仅取前10篇）获取 Abstract 并逐篇进行纳入/排除标准审查。
+1. **浏览器操控驱动全量文献/摘要检索 (Browser Control Driven Search & Full Harvesting)**
+   - 根据研究需求，自动控制浏览器加载目标数据库页面，填充检索式并抓取数据：
+     - **PubMed**: 联动 `pubmed-database` / `pm-search` 与 `browser_*` 操控 `pubmed.ncbi.nlm.nih.gov` 逐页提取。
+     - **IEEE Xplore**: 联动 `ieee-xplore-database` 与 `browser_*` 操控 `ieeexplore.ieee.org` 提取工程与 AI 摘要。
+     - **Cochrane Library**: 联动 `ch-search` 与 `browser_*` 操控 `cochranelibrary.com` 抓取 Trials 与 Reviews。
+     - **Web of Science**: 联动 `wos_lit_mining` 与 `browser_*` 操控 Web of Science 平台检索。
+     - **Embase**: 联动 `embase-web-search` 与 `browser_*` 操控 Embase 会话。
+     - **Scopus**: 联动 `scopus-search` 与 `browser_*` 操控 Scopus 搜索结果页。
+     - **ScienceDirect**: 联动 `sd-search` 与 `browser_*` 操控 Elsevier 平台。
+     - **Google Scholar**: 联动 `gs-search` 与 `browser_*` 操控 Scholar 检索。
+     - **OpenAlex / EuropePMC**: 联动 `literature-search-openalex`, `literature-search-europepmc`。
+   - **逐篇提取摘要**：对检索到的所有相关结果（严禁仅取前10篇）获取 Abstract 并逐篇进行纳入/排除标准审查。
 
 2. **纳入文献 100% 全文获取与深度提取 (Full-Text Retrieval & Extraction)**
-   - 对符合纳入标准的文献，调用全文工具（`pm-fulltext`, `gs-fulltext`, `scopus-fulltext` 等）获取 **100% 全文 (Full-Text)**。
+   - 对符合纳入标准的文献，调用全文工具（`pm-fulltext`, `gs-fulltext`, `scopus-fulltext` 或通过浏览器控制导航至 PMC/Sci-Hub/出版社页面下载）获取 **100% 全文 (Full-Text)**。
    - 从全文正文与附表中提取关键研究数据（样本量、暴露定义、调整后 HR/OR/RR 及其 95% CI）。
    - 调用 `review-feasibility-to-meta` 与 `ai-peer-reviewer` 进行 ROB2 (RCT) 或 ROBINS-I (观察性研究) 偏倚风险测评。
 
@@ -137,9 +141,10 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 ---
 
-## 🛠️ 已集成专业技能矩阵 (Full Database & Tool Mapping)
+## 🛠️ 已集成专业技能与浏览器控制矩阵 (Full Database & Browser Automation Mapping)
 
-环境与本 Skill 已全面无缝整合以下文献库与科研工具：
+环境与本 Skill 已全面无缝整合以下文献库、浏览器控制与科研工具：
+- **浏览器控制引擎**：DeepSeek++ `browser_*` (Debugger / Accessibility Tree DOM 自动化控制)
 - **文献库矩阵**：
   - `pubmed-database` / `pm-search` / `pm-advanced-search` / `pm-paper-detail` / `pm-fulltext` / `pm-export` (PubMed 全套)
   - `ieee-xplore-database` / `ieee-search` / `ieee-paper-detail` / `ieee-export` (IEEE Xplore 全套)
