@@ -1,11 +1,35 @@
 ---
 name: deepseekSCI
-description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。融合 PubMed、Embase、Web of Science、Cochrane、Scopus、ScienceDirect、IEEE Xplore、Google Scholar、OpenAlex 等全套已有医学与工程文献数据库技能，涵盖从 PICO 课题构思、文献检索/综合/Meta分析 (Path A) 到 NHANES/MIMIC 大数据库挖掘、本地 R 语言稳健统计分析、出版级矢量图表创作、文献真伪校验全流程 (Path B)，最终直接产出发表级 SCI 论文。"
+description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。严格遵守【零模拟数据、零步骤跳过、100%真实性】红线。融合 PubMed、Embase、Web of Science、Cochrane、Scopus、ScienceDirect、IEEE Xplore、Google Scholar 等全套数据库，涵盖从 PICO 课题构思、文献检索/综合/Meta分析 (Path A) 到 NHANES/MIMIC 大数据库挖掘、本地 R 语言稳健统计分析、出版级矢量图表创作、文献真伪校验全流程 (Path B)，直接产出发表级 SCI 论文。"
 ---
 
 # deepseekSCI: 医学与科学研究 Plan-Execution 闭环 Protocol
 
-本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流，涵盖 Plan 模式与 Execution 模式的双向闭环迭代，高效联动用户已有的全套医学与工程文献数据库技能（PubMed, Embase, WOS, Cochrane, Scopus, ScienceDirect, IEEE Xplore 等），旨在加速从科研思路到可直接发表 SCI 论文的全流水线。
+本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流，涵盖 Plan 模式与 Execution 模式的双向闭环迭代。
+
+---
+
+## 🚨 核心原则：科研真实性与零模拟数据硬核禁令 (Mandatory Research Integrity)
+
+> [!IMPORTANT]
+> **本 Protocol 适用最高标准的学术诚信规范，任何违反以下红线的行为均视为严重违规：**
+
+1. **🚫 零模拟/虚假数据禁令 (Zero Mock Data Policy)**
+   - **绝对禁止**伪造、拼接、或使用 `set.seed()`/`rnorm()` 等代码生成任何形式的模拟数据、Mock 对象或虚假数值。
+   - 所有分析结果（如 HR/OR/RR、95% CI、$p$ 值、$I^2$ 异质性等）**必须 100% 源自真实的本地 R / Python 脚本对真实 NHANES、MIMIC 数据库或文献真机抽取的运行输出**。
+   - 缺失值必须通过标准的多重插补 (Multiple Imputation) 或完备病例分析处理，严禁人工编造填补。
+
+2. **🪜 零步骤跳过原则 (Complete Step-by-Step Execution)**
+   - **绝对禁止**为了追求速度而跳过研究流程中的任何一步。
+   - 必须完整按顺序执行：**假说建立 $\rightarrow$ 因果 DAG 构造 $\rightarrow$ 变量清洗定义 $\rightarrow$ 共线性 (VIF) 与残差诊断 $\rightarrow$ 主模型构建 $\rightarrow$ RCS 非线性探索 $\rightarrow$ 亚组交互作用分析 $\rightarrow$ 敏感性分析 (E-value) $\rightarrow$ 文献真伪校验 $\rightarrow$ 论文撰写**。
+   - 允许且鼓励更长、更慢的思考与分析轮次，**宁慢勿错，每一步骤必须输出完整诊断日志**。
+
+3. **🔍 100% 真实性与防 AI 幻觉校验 (100% Fact & Citation Verification)**
+   - 论文引用的每一篇参考文献必须经由 `pm-paper-detail` / `reference-intelligence-mining` 校验真实 PMID / DOI / Accession ID，**严禁任何 AI 幻觉生成的虚假文献**。
+   - 论文 Results 部分引用的每一个统计数字必须与本地 R / Python 执行控制台的日志输出 **0 误差对应**。
+
+4. **⚖️ 学术诚信至上 (Accuracy & Integrity Over Speed)**
+   - 当分析速度与结果准确性/真实性发生冲突时，**无条件选择最高精度的准确性与真实性**。
 
 ---
 
@@ -48,7 +72,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 适用于无原始数据、基于已有文献进行二次合成的科研课题，结合用户已有的专业医学与工程文献数据库 Skill 矩阵进行检索与提取，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
 
-### 阶段与步骤：
+### 阶段与步骤（不跳过任何一步）：
 1. **科研思路与文献矩阵检索 (Idea & Multi-Database Search)**
    根据研究需求，自动路由并协同调用已有文献库 Skill：
    - **PubMed**: `pubmed-database`, `pm-search`, `pm-advanced-search`, `pm-paper-detail`, `pm-fulltext`, `pm-export`
@@ -63,7 +87,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
    - **ClinicalTrials**: `clinical-trials-database`
 
 2. **文献综合与偏倚风险评价 (Literature Synthesis & Risk of Bias)**
-   - 自动提取纳入文献的核心数据（样本量、研究设计、HR/OR/RR 及其 95% CI）。
+   - 真实提取纳入文献的核心数据（样本量、研究设计、HR/OR/RR 及其 95% CI）。
    - 调用 `review-feasibility-to-meta` 与 `ai-peer-reviewer` 进行 ROB2 (RCT) 或 ROBINS-I (观察性研究) 工具测评。
 
 3. **Meta 分析与数据计算 (Meta-Analysis Statistics)**
@@ -82,13 +106,13 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 适用于利用 **NHANES**、**MIMIC-IV** 等公开临床数据库及生物医学专项数据库进行横断面 (Cross-Sectional) 或纵向队列 (Longitudinal Cohort) 研究，目标为产出包含完整数据分析与验证的高水平 SCI 论文。
 
-### 阶段与步骤：
+### 阶段与步骤（不跳过任何一步）：
 1. **课题构思与因果分析 (Study Design & DAG)**
    - 确定暴露变量、结局变量及协变量。显式构建倾向性评分匹配 (PSM) 或逆概率加权 (IPW) 策略。
 
-2. **数据库挖掘与分子/基因靶点关联 (Database Mining & Genomic Integration)**
-   - **NHANES 数据库**：调用 `nhanesr-research-agent`、`nhanesr-auto-params` 与 `nhanesr-function-reference` 进行多周期数据合并、复杂抽样权重设定 (`WTMEC2YR` / `WTINT2YR`) 与变量清洗。
-   - **MIMIC 数据库**：调用 `mimicr-agent` 进行 ICU/住院患者 Cohort 构建、时间窗口定义及异常值插补。
+2. **数据库真实挖掘与抽取 (Real Database Mining & Genomic Integration)**
+   - **NHANES 数据库**：调用 `nhanesr-research-agent`、`nhanesr-auto-params` 与 `nhanesr-function-reference` 进行多周期真实数据合并、复杂抽样权重设定 (`WTMEC2YR` / `WTINT2YR`) 与变量清洗。
+   - **MIMIC 数据库**：调用 `mimicr-agent` 进行 ICU/住院患者真实 Cohort 构建、时间窗口定义及异常值插补。
    - **生物医学专项库支持**：联动 `clinvar-database`, `dbsnp-database`, `openfda-database`, `pubchem-database`, `chembl-database`, `opentargets-database`, `uniprot-database`, `gtex-database`, `human-protein-atlas-database` 进行机制解释与分子靶点交叉验证。
 
 3. **驱动本地 R 语言完成稳健统计分析 (Local R Data Analysis)**
@@ -103,7 +127,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
    - 自动生成出版级图表：基线表 (Table 1)、多因素分析森林图、RCS 剂量-效应关联图、K-M 生存曲线。
 
 5. **文章撰写、真实性验证与审稿打磨 (Drafting, Verification & Polish)**
-   - 根据数据分析结果自动撰写 Introduction, Methods, Results, Discussion。
+   - 根据真实数据分析结果自动撰写 Introduction, Methods, Results, Discussion。
    - 调用 `ai-peer-reviewer` 进行 SCI 审稿人视角的严格模拟评估。
    - 完成文献 PMID 严格真实性校验与学术语言润色，产出可以直接发表的完整 SCI 论文初稿。
 
