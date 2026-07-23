@@ -1,11 +1,11 @@
 ---
 name: deepseekSCI
-description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。融合 PubMed、Embase、Web of Science、Cochrane、Scopus、ScienceDirect、Google Scholar、OpenAlex 等全套已有医学文献数据库技能，涵盖从 PICO 课题构思、文献检索/综合/Meta分析 (Path A) 到 NHANES/MIMIC 大数据库挖掘、本地 R 语言稳健统计分析、出版级矢量图表创作、文献真伪校验全流程 (Path B)，最终直接产出发表级 SCI 论文。"
+description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。融合 PubMed、Embase、Web of Science、Cochrane、Scopus、ScienceDirect、IEEE Xplore、Google Scholar、OpenAlex 等全套已有医学与工程文献数据库技能，涵盖从 PICO 课题构思、文献检索/综合/Meta分析 (Path A) 到 NHANES/MIMIC 大数据库挖掘、本地 R 语言稳健统计分析、出版级矢量图表创作、文献真伪校验全流程 (Path B)，最终直接产出发表级 SCI 论文。"
 ---
 
 # deepseekSCI: 医学与科学研究 Plan-Execution 闭环 Protocol
 
-本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流，涵盖 Plan 模式与 Execution 模式的双向闭环迭代，高效联动用户已有的全套医学文献数据库技能（PubMed, Embase, WOS, Cochrane, Scopus, ScienceDirect 等），旨在加速从科研思路到可直接发表 SCI 论文的全流水线。
+本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流，涵盖 Plan 模式与 Execution 模式的双向闭环迭代，高效联动用户已有的全套医学与工程文献数据库技能（PubMed, Embase, WOS, Cochrane, Scopus, ScienceDirect, IEEE Xplore 等），旨在加速从科研思路到可直接发表 SCI 论文的全流水线。
 
 ---
 
@@ -33,7 +33,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 ### 1. Plan 模式（需求构建与方案设计）
 - **规范科研问题**：使用 PICO (Population, Intervention/Exposure, Comparator, Outcome) 或 PECO 框架将用户思路标准化为严格的科研假设。
 - **因果关系与 DAG 构建**：在数据分析或文献抽取前，显式绘制有向无环图 (DAG)，明确暴露因素、结局变量、混杂因子 (Confounders)、中介因子 (Mediators) 和碰撞因子 (Colliders)。
-- **分析/检索 Plan 制定**：明确所使用的医学数据库 (NHANES/MIMIC/PubMed/Embase/WOS等)、R 语言统计模型策略（加权Logistic/Cox/RCS/PSM）及敏感性分析路径。
+- **分析/检索 Plan 制定**：明确所使用的医学与工程数据库 (NHANES/MIMIC/PubMed/Embase/WOS/IEEE等)、R 语言统计模型策略（加权Logistic/Cox/RCS/PSM）及敏感性分析路径。
 
 ### 2. Execution 模式（工具驱动与数据分析执行）
 - **工具调用与执行**：驱动本地 Native Host (`shell`, `python_exec`, `Rscript`) 进行代码运行、文献检索与数据提取。
@@ -46,12 +46,13 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 ## 🔬 流水线 1：文献综述与 Systematic Review / Meta 分析 (Path A)
 
-适用于无原始数据、基于已有文献进行二次合成的科研课题，结合用户已有的专业医学文献数据库 Skill 矩阵进行检索与提取，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
+适用于无原始数据、基于已有文献进行二次合成的科研课题，结合用户已有的专业医学与工程文献数据库 Skill 矩阵进行检索与提取，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
 
 ### 阶段与步骤：
 1. **科研思路与文献矩阵检索 (Idea & Multi-Database Search)**
-   根据研究需求，自动路由并协同调用已有医学文献库 Skill：
+   根据研究需求，自动路由并协同调用已有文献库 Skill：
    - **PubMed**: `pubmed-database`, `pm-search`, `pm-advanced-search`, `pm-paper-detail`, `pm-fulltext`, `pm-export`
+   - **IEEE Xplore**: `ieee-xplore-database`, `ieee-search`, `ieee-paper-detail`, `ieee-export` (针对医学图像处理、AI 算法、生物医学工程 IEEE TMI/TBME/JBHI)
    - **Cochrane Library**: `ch-search`, `ch-advanced-search`, `ch-paper-detail`, `ch-export`
    - **Web of Science**: `wos_lit_mining`, `wos-search`, `wos-paper-detail`, `wos-export`
    - **Embase**: `embase-web-search`, `embase-session`, `embase-check-login`
@@ -59,7 +60,7 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
    - **ScienceDirect**: `sd-search`, `sd-advanced-search`, `sd-paper-detail`, `sd-export`
    - **Google Scholar**: `gs-search`, `gs-advanced-search`, `gs-cited-by`, `gs-fulltext`, `gs-export`
    - **OpenAlex / EuropePMC / Preprints**: `literature-search-openalex`, `literature-search-europepmc`, `literature-search-biorxiv`, `literature-search-arxiv`
-   - **ClinicalTrials**: `clinical-trials-database` (检索在研/已完成临床试验注册)
+   - **ClinicalTrials**: `clinical-trials-database`
 
 2. **文献综合与偏倚风险评价 (Literature Synthesis & Risk of Bias)**
    - 自动提取纳入文献的核心数据（样本量、研究设计、HR/OR/RR 及其 95% CI）。
@@ -108,15 +109,16 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 ---
 
-## 🛠️ 已集成专业技能矩阵 (Full Medical Database & Tool Mapping)
+## 🛠️ 已集成专业技能矩阵 (Full Database & Tool Mapping)
 
-环境与本 Skill 已全面无缝整合以下医学文献库与科研工具：
-- **医学文献库矩阵**：
+环境与本 Skill 已全面无缝整合以下文献库与科研工具：
+- **文献库矩阵**：
   - `pubmed-database` / `pm-search` / `pm-advanced-search` / `pm-paper-detail` / `pm-fulltext` / `pm-export` (PubMed 全套)
+  - `ieee-xplore-database` / `ieee-search` / `ieee-paper-detail` / `ieee-export` (IEEE Xplore 医学图像/AI/工程全套)
   - `embase-web-search` / `embase-session` / `embase-check-login` (Embase 全套)
   - `wos_lit_mining` / `wos-search` / `wos-paper-detail` / `wos-export` (Web of Science 全套)
   - `ch-search` / `ch-advanced-search` / `ch-paper-detail` / `ch-export` (Cochrane Library 全套)
-  - `scopus-search` / `scopus-advanced-search` / `scopus-document-detail` / `scopus-export` (Scopus 全套)
+  - `scopus-search` / `scopus-advanced-search` / `scopus-document-detail` / `scopus-export` / `scopus-fulltext` (Scopus 全套)
   - `sd-search` / `sd-advanced-search` / `sd-paper-detail` / `sd-export` (ScienceDirect 全套)
   - `gs-search` / `gs-advanced-search` / `gs-cited-by` / `gs-fulltext` / `gs-export` (Google Scholar 全套)
   - `literature-search-openalex` / `literature-search-europepmc` / `clinical-trials-database`
