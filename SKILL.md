@@ -1,11 +1,49 @@
 ---
 name: deepseekSCI
-description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Agent Skill。具备【全自动连续循环推进（无须手动输入继续）】与【深入思考自我纠错自愈（报错自动排查修复）】能力。融合浏览器自动化与全套文献库及大数据库，严格遵守【零模拟数据、零步骤跳过、100%真实性】红线，直接产出发表级 SCI 论文。"
+description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式 Graph 蓝图架构 Agent Skill。将科研主线拆解为 Graph 节点与分支 Loop 独立执行，结果校验后回填主干。具备【全自动连续循环推进（免手动口令）】与【深入思考自我纠错自愈】能力。融合浏览器自动化与全套文献库及大数据库，严格遵守【零模拟数据、零步骤跳过、100%真实性】红线，直接产出发表级 SCI 论文。"
 ---
 
-# deepseekSCI: 医学与科学研究 Plan-Execution 闭环 Protocol
+# deepseekSCI: 医学与科学研究 Plan-Execution Graph 蓝图架构 Protocol
 
-本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流，涵盖 Plan 模式与 Execution 模式的双向闭环迭代。
+本 Skill 为 DeepSeek++ / Antigravity 提供专业的医学与科学研究 Agent 工作流。采用 **Graph 蓝图架构 (Graph-Directed Blueprint Architecture)**，将主干任务解耦为多分支 Loop 独立运行与自愈，校验后精确汇聚回主干，极大提升科研产出效率与可靠性。
+
+---
+
+## 🗺️ Graph 蓝图架构与分支 Loop 汇聚机制 (Graph Blueprint Paradigm)
+
+```
+                              ┌────────────────────────┐
+                              │  主干蓝图 (Main Trunk) │
+                              │ PICO 课题与总目标规划  │
+                              └───────────┬────────────┘
+                                          │
+            ┌─────────────────────────────┼─────────────────────────────┐
+            ▼                             ▼                             ▼
+  ┌───────────────────┐         ┌───────────────────┐         ┌───────────────────┐
+  │  分支 Loop A      │         │  分支 Loop B      │         │  分支 Loop C      │
+  │ 多源文献全量抓取  │         │ R 语言模型建模    │         │ 敏感性与 RCS 拟合 │
+  └─────────┬─────────┘         └─────────┬─────────┘         └─────────┬─────────┘
+            │ 思考/自愈/校验              │ 思考/自愈/校验              │ 思考/自愈/校验
+            ▼                             ▼                             ▼
+  ┌───────────────────┐         ┌───────────────────┐         ┌───────────────────┐
+  │ 校验结果回填主干  │         │ 校验结果回填主干  │         │ 校验结果回填主干  │
+  └─────────┬─────────┘         └─────────┬─────────┘         └─────────┬─────────┘
+            └─────────────────────────────┼─────────────────────────────┘
+                                          ▼
+                              ┌────────────────────────┐
+                              │ 汇聚主干：SCI 论文交付 │
+                              └────────────────────────┘
+```
+
+1. **主干任务蓝图 (Main Trunk Blueprint Task Line)**
+   - 保持总体科研目标不偏离（选题 $\rightarrow$ 数据/文献提取 $\rightarrow$ 统计/Meta计算 $\rightarrow$ 矢量图表 $\rightarrow$ 论文撰写与校验）。
+2. **分支图谱分解 (Branch Execution Sub-Loops)**
+   - 在主干的每一个节点，Agent 自动将任务拆解为相互独立的分支 Loop：
+     - **文献检索分支**：PubMed 抓取分支、IEEE Xplore/WOS 抓取分支、ROB2 偏倚评价分支。
+     - **数据分析分支**：基线 Table 1 计算分支、加权 Cox/Logistic 回归与 VIF 诊断分支、RCS 样条拟合分支、E-value 敏感性分支。
+3. **分支自愈校验与主干回填 (Branch Self-Healing & Main Integration)**
+   - 每个分支 Loop 独立进行“思考 $\rightarrow$ 执行 $\rightarrow$ 报错诊断 $\rightarrow$ 自愈重试”。
+   - 仅当分支输出 **100% 正确且校验无误** 的结果时，回填写入主干任务，主干无缝推进至下一 Graph 节点。
 
 ---
 
@@ -53,64 +91,21 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 ---
 
-## 🎯 核心闭环架构：Plan 模式与 Execution 模式迭代循环
-
-```
-                      ┌─────────────────────────┐
-                      │    Plan 模式 (设计)     │
-                      │ 需求构建 / 问题规范 / DAG│
-                      └────────────┬────────────┘
-                                   │
-                         制定方案与指令派发
-                                   │
-                                   ▼
-                      ┌─────────────────────────┐
-                      │   Execution 模式 (执行) │
-                      │ 本地 R/Python / 数据库挖掘│
-                      │ 浏览器控制自动化检索与提取 │
-                      └────────────┬────────────┘
-                                   │
-                ┌──────────────────┴──────────────────┐
-                │             自动评估与自愈           │
-                │ 成功 ──► 自动下一步 (无需手动口令)   │
-                │ 出错 ──► 深入思考根因 ──► 代码/策略修复│
-                └──────────────────┬──────────────────┘
-                                   │
-                                   └────────────► 方案优化与轮次迭代
-```
-
-### 1. Plan 模式（需求构建与方案设计）
-- **规范科研问题**：使用 PICO (Population, Intervention/Exposure, Comparator, Outcome) 或 PECO 框架将用户思路标准化为严格的科研假设。
-- **因果关系与 DAG 构建**：在数据分析或文献抽取前，显式绘制有向无环图 (DAG)，明确暴露因素、结局变量、混杂因子 (Confounders)、中介因子 (Mediators) 和碰撞因子 (Colliders)。
-- **分析/检索 Plan 制定**：明确所使用的医学与工程数据库 (NHANES/MIMIC/PubMed/Embase/WOS/IEEE等)、浏览器自动化操控路径、R 语言统计模型策略（加权Logistic/Cox/RCS/PSM）及敏感性分析路径。
-
-### 2. Execution 模式（工具驱动、浏览器自动化与自愈执行）
-- **工具调用与执行**：驱动本地 Native Host (`shell`, `python_exec`, `Rscript`) 进行代码运行；联动浏览器控制 (`browser_*`) 自动导航至各数据库网页执行输入、翻页与摘要/全文数据抽取。
-- **自愈式结果捕获与质量控制**：
-  - 正常情况：阶段指标通过后**无缝自动启动下一阶段**，不请求人工回复确认。
-  - 异常情况：捕获代码 Traceback / 模型收敛失败，**深入思考寻找替代建模或修复代码**，重新运行通过后再继续。
-
-### 3. 闭环迭代机制
-- 若 Execution 模式中遇到收敛失败、混杂偏倚或异质性过高，**必须返回 Plan 模式**更新调整控制变量或统计模型，重新生成改进后的方案，实现“设计-执行-反馈-再优化”的自动化科研加速。
-
----
-
 ## 🔬 流水线 1：文献综述与 Systematic Review / Meta 分析 (Path A)
 
 适用于无原始数据、基于已有文献进行二次合成的科研课题，目标为产出直接达到发表标准的 Meta 分析或 Systematic Review。
 
-### 阶段与步骤（自动连续执行、无需口令确认）：
-1. **浏览器操控驱动全量文献/摘要检索 (Browser Control Driven Search & Full Harvesting)**
-   - 自动控制浏览器加载目标数据库页面，填充检索式并抓取数据：PubMed, IEEE Xplore, Cochrane, Web of Science, Embase, Scopus, ScienceDirect, Google Scholar, OpenAlex, EuropePMC。
-   - **逐篇提取摘要**：对检索到的所有相关结果获取 Abstract 并逐篇进行审查。
+### 阶段与步骤（Graph 分支 Loop 自动连续推进）：
+1. **精准构建检索式与全量文献/摘要检索 (Precision Search & Full Abstract Harvesting)**
+   - 构建精准检索式，启动各文献库抓取分支 Loop，通过浏览器操控与 API 逐篇提取摘要。
 2. **纳入文献 100% 全文获取与深度提取 (Full-Text Retrieval & Extraction)**
-   - 获取 100% 全文 (Full-Text) 并深入正文与附表提取 HR/OR/RR 及其 95% CI。调用 `review-feasibility-to-meta` 与 `ai-peer-reviewer` 进行 ROB2 / ROBINS-I 偏倚风险测评。
+   - 启动全文获取分支 Loop，100% 深入正文与附表提取 HR/OR/RR 及其 95% CI，进行 ROB2 / ROBINS-I 偏倚测评。
 3. **Meta 分析与数据计算 (Meta-Analysis Statistics)**
-   - 使用 R 语言 (`meta` / `metafor` 包) 进行模型计算，输出异质性指数 ($I^2, \tau^2$)、Egger/Begg 发表偏倚检验及剪补法。若代码报错自动触发深入思考修改 R 脚本。
+   - 启动 R 语言合并分支 Loop，计算 $I^2, \tau^2$、Egger 检验及剪补法。若代码报错自动触发深入思考自愈修复。
 4. **文献真实性校验 (Fact & Citation Verification)**
-   - 校验每一篇引用文献的 PMID/DOI。
+   - 启动校验分支 Loop，核对每一篇引用文献的 PMID/DOI。
 5. **图表创作与顶刊润色 (Publication-ready Figures & Polish)**
-   - 生成 PRISMA 流程图、森林图、漏斗图，完成整篇论文模块化撰写与学术润色，交付论文初稿。
+   - 汇聚各分支结果回填主干，生成 PRISMA 流程图、森林图、漏斗图，完成论文模块化撰写。
 
 ---
 
@@ -118,25 +113,24 @@ description: "DeepSeek++ 医学与科学研究 Plan-Execution 双模式闭环 Ag
 
 适用于利用 **NHANES**、**MIMIC-IV** 等公开临床数据库及生物医学专项数据库进行横断面 (Cross-Sectional) 或纵向队列 (Longitudinal Cohort) 研究，目标为产出包含完整数据分析与验证的高水平 SCI 论文。
 
-### 阶段与步骤（自动连续执行、无需口令确认）：
+### 阶段与步骤（Graph 分支 Loop 自动连续推进）：
 1. **课题构思与因果分析 (Study Design & DAG)**
-   - 确定暴露、结局与协变量。构建 PSM / IPW 策略。
-2. **数据库真实挖掘与抽取 (Real Database Mining & Genomic Integration)**
-   - **NHANES / MIMIC 真实挖掘**：调用 `nhanesr-research-agent` 与 `mimicr-agent` 进行数据清洗与 Cohort 构建。联动专项数据库做机制解释。
+   - 确定暴露、结局与协变量，构建因果 DAG 与 PSM / IPW 策略。
+2. **数据库挖掘与分子/基因靶点关联 (Database Mining & Genomic Integration)**
+   - 启动数据挖掘分支 Loop (`nhanesr-research-agent`, `mimicr-agent`) 进行 Cohort 构建与变量清洗。
 3. **驱动本地 R 语言完成稳健统计分析 (Local R Data Analysis)**
-   - 运行 Table 1 基线表、多因素 Logistic/Cox 回归、RCS 限制性立方样条非线性拟合、亚组分析及 E-value 敏感性分析。若运行报错自动深入思考重构 R 脚本并重试。
-4. **高质量图表绘制 (Publication-ready Visualizations)**
-   - 自动生成出版级图表：基线表 (Table 1)、森林图、RCS 剂量-效应关联图、K-M 生存曲线。
+   - 并行启动分析分支 Loop：生成 Table 1 基线表、多因素 Logistic/Cox 回归、RCS 限制性立方样条拟合、亚组分析及 E-value 敏感性分析。若报错自动深入思考重构 R 脚本。
+4. **高质量图表绘制与主干汇聚 (Publication-ready Visualizations)**
+   - 各分析分支结果回填主干，自动生成出版级 Table 1、森林图、RCS 关联图、K-M 生存曲线。
 5. **文章撰写、真实性验证与审稿打磨 (Drafting, Verification & Polish)**
-   - 根据真实数据结果自动撰写 Introduction, Methods, Results, Discussion。
-   - 完成 PMID 真实性校验与学术润色，交付可发表的 SCI 论文初稿。
+   - 结合真机运算数据撰写全文，完成 PMID 真实性校验与学术润色，交付 SCI 论文初稿。
 
 ---
 
 ## 🛠️ 已集成专业技能与浏览器控制矩阵 (Full Database & Browser Automation Mapping)
 
 环境与本 Skill 已全面无缝整合以下文献库、浏览器控制与科研工具：
-- **自动化流控与自愈引擎**：Deep-Thinking Auto-Recovery & Continuous Pipeline Runner
+- **Graph 蓝图调度引擎**：Graph Blueprint & Branch Execution Sub-Loop Engine
 - **浏览器控制引擎**：DeepSeek++ `browser_*` (Debugger / Accessibility Tree DOM 自动化控制)
 - **文献库矩阵**：
   - `pubmed-database` / `pm-search` / `pm-advanced-search` / `pm-paper-detail` / `pm-fulltext` / `pm-export` (PubMed 全套)
