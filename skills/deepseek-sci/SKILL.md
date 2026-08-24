@@ -2,7 +2,7 @@
 name: deepseek-sci
 description: Python-only 医学科研 Agent，从研究方向发掘到论文投稿，内置医学文献数据库全景检索路由：PubMed/MEDLINE、Embase、Web of Science/BIOSIS、Scopus、Cochrane、CINAHL、PsycINFO、Global Health、ProQuest、Epistemonikos、TRIP、ClinicalTrials.gov/ICTRP/CTIS及各国注册平台、SinoMed/CNKI/万方/维普、LILACS/Global Index Medicus、Europe PMC/OpenAlex/Crossref、Google Scholar、IEEE/ACM、预印本、指南和监管/灰色文献。Use for medical literature search, systematic review, clinical research design, Python analysis, manuscript, peer review, journal targeting, and submission.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # DeepSeekSCI Medical Research Agent
@@ -10,6 +10,17 @@ metadata:
 把一次医学科研任务作为一个有状态、可审计的项目推进，而不是只生成建议或论文文本。亲自检索、读取、计算、生成文件并验证产物；只把需要人工登录、学术判断、作者信息或最终提交确认的事项交给用户。
 
 所有相对路径均以本 `SKILL.md` 所在目录为基准。导入或复制技能时，保留同目录下的 `references/`、`scripts/` 和 `assets/`。
+
+## 已内嵌的完整配套能力
+
+这不是一个只负责分流的总控提示词。原 Codex 医学科研技能库中与医学研究相关的 86 个技能已物化到本技能目录的 [`references/integrated/`](references/integrated/README.md) 中，作为当前 Agent 的内嵌执行章节，安装后不需要另行安装或调用这些技能名称。覆盖范围包括：
+
+- 研究思路、理论/方法创新、数据到发现、PICO、研究设计、RCT、目标试验、MIMIC、NHANES 和医学统计；
+- PubMed、Embase、Web of Science、Scopus、Cochrane、ScienceDirect、Google Scholar、IEEE 的登录、检索、分页、详情、导出、全文和引文网络；
+- 系统评价、Meta/NMA/TSA、综述复刻、叙事综述、迭代综述、证据矩阵、Zotero 笔记和引用智能；
+- 原始研究与综述写作、SCI 润色、双语改写、图表、内部审稿、期刊选定、投稿信、CSL 和投稿包校验。
+
+先读取 [`references/10-integrated-execution.md`](references/10-integrated-execution.md)，再按阶段加载 `references/integrated/source-skill-index.csv` 中的章节。章节中的其他技能名仅是来源标签；直接执行其内容，不要求宿主平台再激活一个外部技能。所有源章节中的 R、Shell 或 PowerShell 示例都必须按本技能的 Python-only 规则转换，并在运行清单中记录转换。
 
 ## 核心结果
 
@@ -141,6 +152,7 @@ python scripts/init_project.py PROJECT_DIR --mode MODE
 - 系统评价、Meta/NMA/TSA、叙事综述：读 [references/06-evidence-synthesis.md](references/06-evidence-synthesis.md)。
 - 写作、审稿、选刊、投稿与修回：读 [references/07-writing-and-submission.md](references/07-writing-and-submission.md)。
 - 需要了解整合来源或外部工具映射：读 [references/09-capability-map.md](references/09-capability-map.md)。
+- 需要执行已经整合的配套技能：先读 [references/10-integrated-execution.md](references/10-integrated-execution.md)，再按 [references/integrated/source-skill-index.csv](references/integrated/source-skill-index.csv) 载入对应章节。
 
 ## 阶段门
 

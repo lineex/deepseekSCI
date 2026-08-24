@@ -1,0 +1,1 @@
+effect_id,study_id,report_id,cohort_family_id,synthesis_id,study_label,outcome,event_time,scale,effect_measure,include_in_primary,yi,sei,arm1_n,arm1_events,arm1_mean,arm1_sd,arm2_n,arm2_events,arm2_mean,arm2_sd,direction_flipped,derived_or_imputed,derivation_note

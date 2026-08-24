@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This skill is a new portable synthesis of the medical-research capabilities found in the local Codex and agent skill libraries. Duplicate copies under `.codex/skills` and `.agents/skills` were consolidated by capability/name. The listed skills are design inputs and optional local accelerators, not runtime dependencies.
+This skill is a portable synthesis of the medical-research capabilities found in the local Codex and agent skill libraries. Duplicate copies under `.codex/skills` and `.agents/skills` were consolidated by capability/name. The operational bodies of 86 source skills are embedded in `references/integrated/`; they are internal chapters, not runtime dependencies or external handoffs. The only remaining dependencies are host access to databases, files, packages, browsers, and submission systems.
 
 ## Integrated capability families
 
@@ -90,4 +90,4 @@ The integrated skill intentionally:
 
 ## External capabilities not bundled
 
-Access to subscription databases, private clinical data, Python packages, reference managers, Office/PDF renderers and online submission systems depends on the host environment. At startup, inventory available capabilities and substitute equivalent tools while preserving the workflow contracts.
+Access to subscription databases, private clinical data, Python packages, reference managers, Office/PDF renderers and online submission systems depends on the host environment. The research procedures themselves are bundled; at startup, inventory available capabilities and substitute equivalent tools while preserving the workflow contracts. Do not ask the host to install another skill merely because an embedded chapter names its original source skill.
