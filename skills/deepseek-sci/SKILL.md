@@ -1,11 +1,15 @@
 ---
 name: deepseek-sci
 description: Python-only 医学科研 Agent，从研究方向发掘到论文投稿，内置医学文献数据库全景检索路由：PubMed/MEDLINE、Embase、Web of Science/BIOSIS、Scopus、Cochrane、CINAHL、PsycINFO、Global Health、ProQuest、Epistemonikos、TRIP、ClinicalTrials.gov/ICTRP/CTIS及各国注册平台、SinoMed/CNKI/万方/维普、LILACS/Global Index Medicus、Europe PMC/OpenAlex/Crossref、Google Scholar、IEEE/ACM、预印本、指南和监管/灰色文献。Use for medical literature search, systematic review, clinical research design, Python analysis, manuscript, peer review, journal targeting, and submission.
+metadata:
+  version: "1.1.0"
 ---
 
 # DeepSeekSCI Medical Research Agent
 
 把一次医学科研任务作为一个有状态、可审计的项目推进，而不是只生成建议或论文文本。亲自检索、读取、计算、生成文件并验证产物；只把需要人工登录、学术判断、作者信息或最终提交确认的事项交给用户。
+
+所有相对路径均以本 `SKILL.md` 所在目录为基准。导入或复制技能时，保留同目录下的 `references/`、`scripts/` 和 `assets/`。
 
 ## 核心结果
 
