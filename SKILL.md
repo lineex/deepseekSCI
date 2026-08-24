@@ -1,9 +1,9 @@
 ---
 name: deepseek-sci
-description: 医学科研端到端执行技能，从研究方向发掘、问题收敛、实时文献检索与创新性验证，到研究设计、统计分析、证据合成、论文写作、同行评审、期刊选择和投稿包/在线投稿准备。适用于临床原始研究、MIMIC/NHANES/本地队列、RCT与目标试验模拟、诊断/预后模型、系统评价/Meta分析、叙事综述、基金构思及已有稿件修订。Use for medical research ideation, feasibility, protocol, analysis, evidence synthesis, manuscript, peer review, journal targeting, and submission workflows.
+description: Python-only 医学科研 Agent，从研究方向发掘到论文投稿，内置医学文献数据库全景检索路由：PubMed/MEDLINE、Embase、Web of Science/BIOSIS、Scopus、Cochrane、CINAHL、PsycINFO、Global Health、ProQuest、Epistemonikos、TRIP、ClinicalTrials.gov/ICTRP/CTIS及各国注册平台、SinoMed/CNKI/万方/维普、LILACS/Global Index Medicus、Europe PMC/OpenAlex/Crossref、Google Scholar、IEEE/ACM、预印本、指南和监管/灰色文献。Use for medical literature search, systematic review, clinical research design, Python analysis, manuscript, peer review, journal targeting, and submission.
 ---
 
-# DeepSeekSCI
+# DeepSeekSCI Medical Research Agent
 
 把一次医学科研任务作为一个有状态、可审计的项目推进，而不是只生成建议或论文文本。亲自检索、读取、计算、生成文件并验证产物；只把需要人工登录、学术判断、作者信息或最终提交确认的事项交给用户。
 
@@ -17,6 +17,82 @@ description: 医学科研端到端执行技能，从研究方向发掘、问题�
 4. 执行可复现的检索、筛选、提取、分析或证据合成。
 5. 只基于核验后的结果和文献撰写论文、图表与补充材料。
 6. 完成内部审稿、期刊适配、投稿文件核验和在线投稿字段草稿。
+
+## 医学文献检索总路由
+
+把每个数据库视为一个独立 connector。先按研究问题选择来源，再逐库执行原生检索；不要把一个平台的检索式直接粘贴到另一个平台。凡本机已有命名技能时优先调用，缺少命名技能时用 Python API connector 或已登录浏览器 connector 实现相同契约。
+
+### 每个数据库必须实现的动作
+
+1. `session_check`: 检查访问入口、机构登录、订阅范围和 CAPTCHA 状态。
+2. `build_query`: 将 PICO/PECO/PCC 概念翻译为该库的主题词、字段码、邻近算符和日期/文献类型限制。
+3. `search`: 执行精确检索并保存数据库、平台、完整检索式、运行时间、命中数和查询翻译。
+4. `paginate`: 遍历可用结果或明确记录 API/UI 上限、游标和未获取数量。
+5. `detail`: 获取稳定 ID、题名、作者、机构、期刊、年份、摘要状态、DOI/PMID、文献类型和来源链接。
+6. `export`: 优先正式导出 RIS/BibTeX/NBIB/CSV/XML/JSON；保存原始文件和 SHA-256。
+7. `fulltext`: 解析 PMC/出版商/机构订阅/Open Access 链接；区分可获取、待登录、无全文和未核查。
+8. `audit`: 校验命中数与导出数、抽查代表记录、记录缺失字段，再进入跨库去重。
+
+### 国际生物医学与综合引文库
+
+| 数据库/平台 | 原生检索重点 | 本机技能或通用实现 |
+|---|---|---|
+| PubMed/MEDLINE | MeSH、`[tiab]`、`[pt]`、日期字段；E-utilities 保存 `count/querytranslation` | `pm-search`, `pm-advanced-search`, `pm-paper-detail`, `pm-navigate-pages`, `pm-export`, `pm-fulltext` |
+| Ovid MEDLINE | MeSH explode/focus、`.ti,ab,kf.`, `.mp.`, `adjN`、去重集合 | authenticated browser connector + Ovid 导出 |
+| Embase.com/Ovid Embase | Emtree `/exp`、`:ti,ab,kw`、`NEAR/n`/`NEXT/n`、会议摘要 | `embase-session`, `embase-check-login`, `embase-login`, `embase-web-search` |
+| Web of Science Core Collection/BIOSIS | `TS=`, `TI=`, `AB=`, `AK=`, `NEAR/x`、引文网络、UT | `wos-search`, `wos-parse-results`, `wos-navigate-pages`, `wos-paper-detail`, `wos-export`, `wos-download`, `wos_lit_mining` |
+| Scopus | `TITLE-ABS-KEY`, `INDEXTERMS`, `W/n`, `PRE/n`、EID、cited-by | `scopus-login`, `scopus-search`, `scopus-advanced-search`, `scopus-parse-results`, `scopus-navigate-pages`, `scopus-document-detail`, `scopus-author-detail`, `scopus-source-browse`, `scopus-export`, `scopus-fulltext` |
+| Cochrane Library | Search Manager、MeSH、`:ti,ab,kw`；Reviews/Protocols/CENTRAL 分开计数 | `ch-search`, `ch-advanced-search`, `ch-parse-results`, `ch-navigate-pages`, `ch-paper-detail`, `ch-export`, `ch-download` |
+| CINAHL (EBSCO) | CINAHL Headings `MH`、`MM`、`TX`、`Nn`/`Wn`，护理与 allied health | authenticated browser connector + EBSCO RIS |
+| APA PsycINFO | Thesaurus/Subject Headings、`TI/AB`、邻近算符，心理与行为结局 | provider-specific browser/API connector |
+| Global Health/CAB Abstracts | CAB Thesaurus、公共卫生/热带病/全球健康区域覆盖 | provider-specific browser connector |
+| ProQuest | `NOFT`, `TI`, `AB`, `SU`, `NEAR/n`；学位论文与会议灰色文献 | authenticated browser connector + RIS/CSV |
+| Epistemonikos | 系统评价与结构化 evidence matrix | API/browser connector |
+| TRIP Database | 临床问题、指南、证据摘要、系统评价 | browser connector；回到原始指南/研究核验 |
+| Google Scholar | 题名/作者/年份、cited-by、related；记录结果上限与 CAPTCHA | `gs-search`, `gs-advanced-search`, `gs-navigate-pages`, `gs-cited-by`, `gs-export`, `gs-fulltext` |
+| IEEE Xplore/ACM Digital Library | 医学工程、AI、影像、传感器；字段检索和会议论文 | `ieee-xplore-database` 或 API/browser connector |
+| ScienceDirect及出版商平台 | 题名/摘要/关键词、期刊内检索、全文与补充材料 | `sd-search`, `sd-advanced-search`, `sd-parse-results`, `sd-navigate-pages`, `sd-paper-detail`, `sd-journal-browse`, `sd-export`, `sd-download`；只作补充发现/全文来源 |
+
+### 中文与区域医学文献库
+
+| 数据库/平台 | 原生检索重点 | 实现 |
+|---|---|---|
+| SinoMed/中国生物医学文献服务系统(CBM) | 中文医学主题词、MeSH、中英文同义词、智能/精确检索 | authenticated browser connector + 正式导出 |
+| CNKI/中国知网 | 主题、篇名、关键词、摘要、基金、作者/机构；医学与学位论文分库 | authenticated browser connector + Refworks/NoteExpress/CSV |
+| 万方数据知识服务平台 | 主题/题名/关键词/摘要、期刊/学位/会议/标准 | authenticated browser connector + 引文导出 |
+| 维普中文科技期刊数据库 | 题名/关键词/摘要/分类号、同义词扩展 | authenticated browser connector + 引文导出 |
+| LILACS/BVS | DeCS/MeSH、`mh:`、`tw:`；拉丁美洲与加勒比医学证据 | BVS API/browser connector |
+| WHO Global Index Medicus | AIM、IMEMR、IMSEAR、WPRIM、LILACS 等区域索引 | GIM API/browser connector；保存区域库标签 |
+| African Index Medicus/IMEMR/IMSEAR/WPRIM | 非洲、东地中海、东南亚、西太区本地证据 | 经 GIM 或区域入口检索 |
+| KoreaMed/KMbase/KCI | 韩国医学期刊与本地语言证据 | API/browser connector |
+| J-STAGE/JMEDPlus/CiNii Research | 日本医学、药学与学术期刊 | API/browser connector |
+
+### 试验、方案、指南、监管与开放来源
+
+| 来源 | 主要用途 | 实现 |
+|---|---|---|
+| ClinicalTrials.gov | 已注册/进行中/未发表试验、结果与 NCT 号 | API v2 Python connector |
+| WHO ICTRP | 多注册平台聚合与跨注册号识别 | browser/export connector |
+| EU CTIS, ISRCTN, ChiCTR, ANZCTR, UMIN-CTR, DRKS, ReBec, IRCT, CTRI | 区域试验注册、方案与状态 | 各平台 API/browser connector |
+| PROSPERO, OSF Registries | 系统评价和开放方案的重复性/更新检查 | API/browser connector |
+| WHO, NICE, CDC, USPSTF, SIGN及专业学会官网 | 指南、证据报告、更新日期 | 官方站点搜索；保存版本与访问日期 |
+| FDA, EMA, NMPA及其他监管机构 | 审评报告、标签、安全性、批准状态 | 官方 API/站点 connector |
+| Europe PMC/PMC | 摘要、引用、开放全文 XML、资助与预印本 | Europe PMC REST/NCBI API connector |
+| OpenAlex, Crossref, Semantic Scholar | 开放元数据、引用关系、DOI 补全和去重辅助 | 官方 API connector |
+| medRxiv, bioRxiv, Research Square, arXiv | 预印本与最新证据 | API/RSS/browser connector；显式标注未同行评审 |
+| Unpaywall, CORE, BASE,机构知识库 | 开放全文定位与灰色文献 | API/OAI-PMH connector |
+
+未列名的专业库、国家库或学会库一律套用八动作 connector 契约，并在 `search/search_log.csv` 新增来源；不要因没有专用技能名而跳过用户指定数据库。
+
+### 按问题选择最低充分数据库组合
+
+- 干预性系统评价：MEDLINE + Embase + CENTRAL + 至少一个引文库 + 试验注册平台。
+- 诊断/预后/病因：MEDLINE + Embase + 适合领域的引文库；按人群增加区域库。
+- 护理/康复：增加 CINAHL；心理/行为：增加 PsycINFO。
+- 公共卫生/全球健康：增加 Global Health、GIM、LILACS/区域库。
+- 医学 AI/器械：增加 IEEE Xplore、ACM、ClinicalTrials.gov 和监管来源。
+- 中国主题：增加 SinoMed、CNKI、万方、维普与 ChiCTR；分别记录中文/英文检索式。
+- 任何组合都要做参考文献回溯、cited-by 前向追踪、相似文献和更新检索。
 
 ## 启动与恢复
 
@@ -118,12 +194,27 @@ python scripts/init_project.py PROJECT_DIR --mode MODE
 6. 不生成或填补研究结果。演示结构时用清楚标记的占位符，绝不让它们进入正文结论。
 7. 不把语言润色当成科学校验。科学审查、引用审计、统计复核和格式检查分别留痕。
 
+## Python-only 构建原则
+
+所有确定性自动化、数据处理、统计分析和文件生成统一使用 Python；SQL 只能通过 Python 的 SQLite/DuckDB/数据库客户端执行。不要生成 R、PowerShell 或 Bash 数据流水线。
+
+1. **版本与入口**：面向 Python 3.11+；每个脚本提供 `argparse` CLI、`main()`、明确退出码和 `if __name__ == "__main__"`。
+2. **分层**：按 `connectors -> raw records -> normalized records -> dedup/screen/extract -> analysis -> manuscript outputs -> validation` 分层；数据库 connector 不直接写论文。
+3. **统一记录模型**：用 `dataclass`/TypedDict 定义 `source, source_id, title, abstract, authors, year, doi, pmid, study_type, url, retrieved_at, query_id, raw_path`；缺失字段保留状态，不编造。
+4. **结构化优先**：API/正式导出优先于 DOM；JSON/XML/CSV/RIS 用解析器处理。网页必须用 Playwright 等真实浏览器，选择器和分页逻辑单独封装。
+5. **库选择**：标准库优先；网络用 `httpx`/`requests`，解析用 `lxml`/BeautifulSoup，数据用 `pandas`/Polars/PyArrow，存储用 SQLite/DuckDB，统计用 SciPy/statsmodels/scikit-learn/lifelines/PyMC，文档用 python-docx/openpyxl，图形用 matplotlib/seaborn。只引入实际需要并锁定版本。
+6. **可靠网络**：设置明确 timeout、指数退避、`Retry-After`、速率限制、游标续跑、缓存和 User-Agent；失败时保留已完成页与 checkpoint。
+7. **原始数据不可变**：原始响应/导出只读保存，写入 SHA-256；标准化与去重输出到新文件，禁止原地覆盖来源记录。
+8. **可复现**：固定随机种子，保存 Python/依赖版本、命令参数、输入输出哈希、Git commit 和运行日志；从锁定输入可一键重跑。
+9. **验证**：为 query translation、分页、XML/JSON 解析、编码、去重和断点恢复编写 `pytest`/`unittest`；外部 API 使用录制 fixture 或 mock，另保留小规模 live smoke test。
+10. **安全与兼容**：凭据只读环境变量/系统密钥库；UTF-8 默认，路径用 `pathlib`，时区时间用带 offset 的 ISO 8601；不在代码或日志写 token、cookie、患者标识。
+
 ## 可移植工具约定
 
-优先使用当前环境已有的结构化 API、浏览器、文献管理器、R/Python、DOCX/PDF 和表格工具。不存在某个命名工具时，按能力替换，不依赖 Codex 专用名称：
+优先使用当前环境已有的结构化 API、已登录浏览器、文献管理器、Python、DOCX/PDF 和表格工具。不存在某个命名工具时，按能力替换，不依赖 Codex 专用名称：
 
 - `search`: 数据库 API 或经过登录的网页界面；
-- `compute`: 本地 R/Python/SQL；
+- `compute`: 本地 Python；SQL 通过 Python 客户端执行；
 - `reference_manager`: Zotero、RIS、BibTeX 或 CSV；
 - `document`: DOCX/LaTeX/Markdown；
 - `browser`: 期刊指南、受登录保护数据库和投稿系统；

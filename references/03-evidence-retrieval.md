@@ -6,17 +6,23 @@ Use databases for distinct coverage rather than prestige or a fixed count.
 
 | Need | Typical sources |
 |---|---|
-| Biomedical core | MEDLINE/PubMed, Embase |
-| Trials and protocols | CENTRAL, ClinicalTrials.gov, WHO ICTRP |
-| Multidisciplinary citation coverage | Web of Science, Scopus, OpenAlex |
+| Biomedical core | PubMed/MEDLINE, Ovid MEDLINE, Embase |
+| Trials and protocols | CENTRAL, ClinicalTrials.gov, WHO ICTRP, CTIS, ISRCTN and national registries |
+| Multidisciplinary citation coverage | Web of Science/BIOSIS, Scopus, OpenAlex, Crossref |
 | Nursing/allied health | CINAHL |
 | Psychology/behavior | PsycINFO |
+| Public/global health | Global Health/CAB, Global Index Medicus, LILACS/BVS |
+| Reviews/guidance | Cochrane Library, Epistemonikos, TRIP, official guideline organizations |
+| Chinese evidence | SinoMed/CBM, CNKI, Wanfang, VIP |
+| Regional evidence | AIM, IMEMR, IMSEAR, WPRIM, KoreaMed/KMbase, J-STAGE/JMEDPlus/CiNii |
 | Engineering/medical AI | IEEE Xplore, ACM Digital Library |
-| Reviews/guidance | Cochrane Library, guideline organizations |
-| Preprints | medRxiv, bioRxiv, arXiv when appropriate |
-| Regional evidence | Relevant regional databases, documented explicitly |
+| Grey literature | ProQuest, regulatory agencies, dissertations, conference and institutional repositories |
+| Open full text/metadata | Europe PMC/PMC, OpenAlex, Crossref, Unpaywall, CORE, BASE |
+| Preprints | medRxiv, bioRxiv, Research Square, arXiv when appropriate |
 
 Google Scholar and publisher platforms can support citation chasing and access, but are poor substitutes for a reproducible primary search.
+
+The root `SKILL.md` contains the complete database connector matrix and local skill routing. Apply its eight-action contract to every named or user-specified source.
 
 ## 2. Preserve provenance
 

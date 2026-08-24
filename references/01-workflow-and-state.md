@@ -108,7 +108,7 @@ Each computational run should capture:
   "protocol_version": "VERSION",
   "input_files": [{"path": "PATH", "sha256": "HASH"}],
   "script": "PATH",
-  "software": {"language": "R-or-Python", "version": "VERSION"},
+  "software": {"language": "Python", "version": "VERSION"},
   "seed": "SEED-or-not-applicable",
   "parameters": {},
   "outputs": [{"path": "PATH", "sha256": "HASH"}],

@@ -24,7 +24,7 @@ STAGES = (
     "all",
 )
 
-TEXT_SUFFIXES = {".md", ".txt", ".csv", ".json", ".yaml", ".yml", ".tex", ".r", ".py"}
+TEXT_SUFFIXES = {".md", ".txt", ".csv", ".json", ".yaml", ".yml", ".tex", ".py"}
 PLACEHOLDER_PATTERN = re.compile(
     r"\{\{[^{}]+\}\}|\[(?:TO COMPLETE|TODO|VERIFY|DATA CHECK|CITATION NEEDED)\]|\bTBD\b",
     re.IGNORECASE,

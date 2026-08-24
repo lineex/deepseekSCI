@@ -52,6 +52,8 @@ This skill is a new portable synthesis of the medical-research capabilities foun
 - Reference management and styles: `zotero-csl-skill`, `pm-export`, database-specific export skills.
 - Cross-database coordination: `literature-review-workflow`, `review-feasibility-to-meta`, `WOS Literature Mining`.
 
+Generic Python API or authenticated-browser connectors extend the same search/export/detail/full-text contract to Ovid MEDLINE, CINAHL, PsycINFO, Global Health/CAB, ProQuest, Epistemonikos, TRIP, SinoMed/CBM, CNKI, Wanfang, VIP, LILACS/BVS, Global Index Medicus and its regional indexes, KoreaMed/KMbase/KCI, J-STAGE/JMEDPlus/CiNii, ClinicalTrials.gov, WHO ICTRP, CTIS, ISRCTN, ChiCTR, ANZCTR, UMIN-CTR, DRKS, ReBec, IRCT, CTRI, PROSPERO, OSF, Europe PMC/PMC, OpenAlex, Crossref, Semantic Scholar, Unpaywall, CORE, BASE, medRxiv, bioRxiv, Research Square, arXiv, guideline organizations and regulatory agencies. See the root `SKILL.md` for the complete routing matrix.
+
 ### Manuscript, language, review and submission
 
 - `manuscript-writing-polish-format`: draft-to-submission gates and revision control.
@@ -88,4 +90,4 @@ The integrated skill intentionally:
 
 ## External capabilities not bundled
 
-Access to subscription databases, private clinical data, R/Python packages, reference managers, Office/PDF renderers and online submission systems depends on the host environment. At startup, inventory available capabilities and substitute equivalent tools while preserving the workflow contracts.
+Access to subscription databases, private clinical data, Python packages, reference managers, Office/PDF renderers and online submission systems depends on the host environment. At startup, inventory available capabilities and substitute equivalent tools while preserving the workflow contracts.
