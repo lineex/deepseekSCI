@@ -1,0 +1,1 @@
+record_id,study_family_id,citation,doi,pmid,year,country,setting,design,population,sample_size,exposure_or_intervention,comparator,outcome,outcome_time,effect_measure,estimate,ci_lower,ci_upper,p_value,adjustment_set,missingness,risk_of_bias,funding,full_text_status,source_database,verification_status,notes
